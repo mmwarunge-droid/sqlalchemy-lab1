@@ -6,7 +6,7 @@ from models import Comment, Post, User
 fake = Faker()
 
 # add comments
-with app.app_context():# TODO : remove all data before seeding
+with app.app_context():#remove all data before seeding
     Comment.query.delete()
     Post.query.delete()
     User.query.delete()
