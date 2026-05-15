@@ -1,27 +1,31 @@
 from flask import Flask
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-
-
+from extensions import db, migrate
 
 app = Flask(__name__)
+
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-
-
-CORS(app)
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = "sehtrsdyhndtejdydunuyehbdrvteryhe"
 
-# models
+CORS(app)
+
+db.init_app(app)
+migrate.init_app(app, db)
+
 import models
 
-# views
-import views.post
+from views.post import post_bp
+app.register_blueprint(post_bp)
 
 
+@app.route("/")
+def home():
+    return {
+        "message": "Flask app is running",
+        "routes": [str(rule) for rule in app.url_map.iter_rules()]
+    }
 
-# export FLASK_APP=app.py
-# export FLASK_DEBUG=1
 
+if __name__ == "__main__":
+    app.run(port=5000, debug=True)
