@@ -5,7 +5,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False)
 
-    posts = db.relationship("Post", backref='user')
+    posts = db.relationship("Post", backref='user', cascade="all, delete-orphan")
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -13,7 +13,7 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id") )
 
-    comments = db.relationship("Comment", backref='post')
+    comments = db.relationship("Comment", backref='post', cascade="all, delete-orphan")
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
